@@ -3,7 +3,7 @@ namespace Rad301ClubsV1.Migrations.ClubModelMigrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class InitialClubModel : DbMigration
+    public partial class Initial : DbMigration
     {
         public override void Up()
         {
@@ -37,17 +37,29 @@ namespace Rad301ClubsV1.Migrations.ClubModelMigrations
                 "dbo.Member",
                 c => new
                     {
-                        memberID = c.Guid(nullable: false),
-                        StudentID = c.Guid(nullable: false),
+                        memberID = c.Int(nullable: false, identity: true),
+                        ClubId = c.Int(nullable: false),
+                        StudentID = c.String(nullable: false, maxLength: 128),
                         approved = c.Boolean(nullable: false),
-                        Club_ClubId = c.Int(),
                         ClubEvent_EventID = c.Int(),
                     })
-                .PrimaryKey(t => new { t.memberID, t.StudentID })
-                .ForeignKey("dbo.Club", t => t.Club_ClubId)
+                .PrimaryKey(t => new { t.memberID, t.ClubId, t.StudentID })
+                .ForeignKey("dbo.Club", t => t.ClubId, cascadeDelete: true)
+                .ForeignKey("dbo.Student", t => t.StudentID, cascadeDelete: true)
                 .ForeignKey("dbo.ClubEvent", t => t.ClubEvent_EventID)
-                .Index(t => t.Club_ClubId)
+                .Index(t => t.ClubId)
+                .Index(t => t.StudentID)
                 .Index(t => t.ClubEvent_EventID);
+            
+            CreateTable(
+                "dbo.Student",
+                c => new
+                    {
+                        StudentID = c.String(nullable: false, maxLength: 128),
+                        Fname = c.String(),
+                        Sname = c.String(),
+                    })
+                .PrimaryKey(t => t.StudentID);
             
         }
         
@@ -55,10 +67,13 @@ namespace Rad301ClubsV1.Migrations.ClubModelMigrations
         {
             DropForeignKey("dbo.Member", "ClubEvent_EventID", "dbo.ClubEvent");
             DropForeignKey("dbo.ClubEvent", "ClubId", "dbo.Club");
-            DropForeignKey("dbo.Member", "Club_ClubId", "dbo.Club");
+            DropForeignKey("dbo.Member", "StudentID", "dbo.Student");
+            DropForeignKey("dbo.Member", "ClubId", "dbo.Club");
             DropIndex("dbo.Member", new[] { "ClubEvent_EventID" });
-            DropIndex("dbo.Member", new[] { "Club_ClubId" });
+            DropIndex("dbo.Member", new[] { "StudentID" });
+            DropIndex("dbo.Member", new[] { "ClubId" });
             DropIndex("dbo.ClubEvent", new[] { "ClubId" });
+            DropTable("dbo.Student");
             DropTable("dbo.Member");
             DropTable("dbo.Club");
             DropTable("dbo.ClubEvent");

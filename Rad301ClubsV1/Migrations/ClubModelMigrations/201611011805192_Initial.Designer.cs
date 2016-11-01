@@ -7,13 +7,13 @@ namespace Rad301ClubsV1.Migrations.ClubModelMigrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class InitialClubModel : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialClubModel));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201610141043297_Initial Club Model"; }
+            get { return "201611011805192_Initial"; }
         }
         
         string IMigrationMetadata.Source

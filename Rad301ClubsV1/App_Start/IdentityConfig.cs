@@ -11,15 +11,29 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Rad301ClubsV1.Models;
+using System.Configuration;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace Rad301ClubsV1
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            await Execute(message);
+        }
+        static async Task Execute(IdentityMessage message)
+        {
+            string apiKey = ConfigurationManager.AppSettings["SGAPIKEY"];
+            dynamic sg = new SendGridAPIClient(apiKey);
+            Email from = new Email("powell.paul@itsligo.ie");
+            string subject = "Confirm Email address";
+            Email to = new Email(message.Destination);
+            Content content = new Content("text/html", message.Body);
+            Mail mail = new Mail(from, subject, to, content);
+            dynamic response = await sg.client.mail.send.post(requestBody: mail.Get());
         }
     }
 

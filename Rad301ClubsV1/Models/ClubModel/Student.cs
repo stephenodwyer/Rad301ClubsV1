@@ -18,6 +18,6 @@ namespace Rad301ClubsV1.Models.ClubModel
         [Display(Name = "Family Name")]
         public string Sname { get; set; }
 
-        public virtual ICollection<Member> memberOfClubs { get; set; }
+        //public virtual ICollection<Member> memberOfClubs { get; set; }
     }
 }
