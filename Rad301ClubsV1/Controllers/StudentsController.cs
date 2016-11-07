@@ -12,110 +12,107 @@ using Rad301ClubsV1.Models.ClubModel;
 namespace Rad301ClubsV1.Controllers
 {
     [Authorize]
-    public class ClubsController : Controller
+    public class StudentsController : Controller
     {
         private ClubContext db = new ClubContext();
 
-        // GET: Clubs
-        public async Task<ActionResult> Index(string ClubName = null )
+        // GET: Students
+        public async Task<ActionResult> Index()
         {
-            return View(await db.Clubs
-                .Where(c => ClubName == null || c.ClubName.StartsWith(ClubName))
-                .ToListAsync()
-                );
+            return View(await db.Students.ToListAsync());
         }
 
-        // GET: Clubs/Details/5
-        public async Task<ActionResult> Details(int? id)
+        // GET: Students/Details/5
+        public async Task<ActionResult> Details(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Club club = await db.Clubs.FindAsync(id);
-            if (club == null)
+            Student student = await db.Students.FindAsync(id);
+            if (student == null)
             {
                 return HttpNotFound();
             }
-            return View(club);
+            return View(student);
         }
 
-        // GET: Clubs/Create
+        // GET: Students/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Clubs/Create
+        // POST: Students/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ClubId,ClubName,CreationDate")] Club club)
+        public async Task<ActionResult> Create([Bind(Include = "StudentID,Fname,Sname")] Student student)
         {
             if (ModelState.IsValid)
             {
-                db.Clubs.Add(club);
+                db.Students.Add(student);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(club);
+            return View(student);
         }
 
-        // GET: Clubs/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        // GET: Students/Edit/5
+        public async Task<ActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Club club = await db.Clubs.FindAsync(id);
-            if (club == null)
+            Student student = await db.Students.FindAsync(id);
+            if (student == null)
             {
                 return HttpNotFound();
             }
-            return View(club);
+            return View(student);
         }
 
-        // POST: Clubs/Edit/5
+        // POST: Students/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ClubId,ClubName,CreationDate")] Club club)
+        public async Task<ActionResult> Edit([Bind(Include = "StudentID,Fname,Sname")] Student student)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(club).State = EntityState.Modified;
+                db.Entry(student).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(club);
+            return View(student);
         }
 
-        // GET: Clubs/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        // GET: Students/Delete/5
+        public async Task<ActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Club club = await db.Clubs.FindAsync(id);
-            if (club == null)
+            Student student = await db.Students.FindAsync(id);
+            if (student == null)
             {
                 return HttpNotFound();
             }
-            return View(club);
+            return View(student);
         }
 
-        // POST: Clubs/Delete/5
+        // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            Club club = await db.Clubs.FindAsync(id);
-            db.Clubs.Remove(club);
+            Student student = await db.Students.FindAsync(id);
+            db.Students.Remove(student);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

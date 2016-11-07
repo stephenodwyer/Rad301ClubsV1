@@ -5,6 +5,11 @@
 }
 
 <h2>Index</h2>
+@* A form to post back to the same controller a search term *@
+<form method="get">
+    <input type="search" name="ClubName"/>
+    <input type= "submit" name="Search by Club name"/>
+</form>
 
 <p>
     @Html.ActionLink("Create New", "Create")

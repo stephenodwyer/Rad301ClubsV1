@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Rad301ClubsV1.Models;
+using Rad301ClubsV1.Models.ClubModel;
 
 namespace Rad301ClubsV1.Controllers
 {
@@ -75,9 +76,21 @@ namespace Rad301ClubsV1.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var usr = UserManager.Users.FirstOrDefault(u => u.Email == model.Email);
+            if(usr != null)
+            {
+                if (!usr.EmailConfirmed)
+                {
+                        ModelState.AddModelError("", "You Must confirm your Email before you can login. Check your email Inbox and Junk Folder");
+                        return View(model);
+                }
+            }
+            // If we get here we are email confirmed and we can sign in
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
             switch (result)
             {
+                
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -149,14 +162,35 @@ namespace Rad301ClubsV1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+            
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                // Check that the Id has not been used before
+                using(ApplicationDbContext db = new ApplicationDbContext())
+                {
+                    var usr = db.Users.FirstOrDefault(u => u.StudentID.ToUpper() == model.StudentID.ToUpper());
+                    if (usr!= null)
+                    {
+                        ModelState.AddModelError("Invalid Student ID", "Student ID has already been used for registration" + model.StudentID);
+                        return (View(model));
+                    }
+                }               
+                // Check that the ID being used is valid
+                using (ClubContext ctx = new ClubContext())
+                {
+                    var existing = ctx.Students.FirstOrDefault(s => s.StudentID.ToUpper() == model.StudentID.ToUpper());
+                    if (existing == null)
+                    {
+                        ModelState.AddModelError("Student ID does not exist in our records", "Student ID does not exist in our records" + model.StudentID);
+                        return (View(model));
+                    }
+                }
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, DateJoined = DateTime.Now  };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

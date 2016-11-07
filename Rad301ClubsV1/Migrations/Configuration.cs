@@ -57,7 +57,7 @@ namespace Rad301ClubsV1.Migrations
                 Email = "S00000001@mail.itsligo.ie",
                 DateJoined = DateTime.Now,
                 UserName = "S00000001@mail.itsligo.ie",
-                PasswordHash = new PasswordHasher().HashPassword("Ss00000001$1"),
+                PasswordHash = new PasswordHasher().HashPassword("SS00000001$1"),
                 SecurityStamp = Guid.NewGuid().ToString(),
             });
 

@@ -70,6 +70,11 @@ namespace Rad301ClubsV1.Models
         public string Email { get; set; }
 
         [Required]
+        [RegularExpression(@"^[S|s]\d{8}$", ErrorMessage ="Student ID must start with an S and have 9 digits")]
+        [Display(Name = "StudentID")]
+        public string StudentID { get; set; }
+
+        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
