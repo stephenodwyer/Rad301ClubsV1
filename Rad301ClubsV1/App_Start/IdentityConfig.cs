@@ -28,7 +28,7 @@ namespace Rad301ClubsV1
         {
             string apiKey = ConfigurationManager.AppSettings["SGAPIKEY"];
             dynamic sg = new SendGridAPIClient(apiKey);
-            Email from = new Email("powell.paul@itsligo.ie");
+            Email from = new Email("s00155965@mail.itsligo.ie");
             string subject = "Confirm Email address";
             Email to = new Email(message.Destination);
             Content content = new Content("text/html", message.Body);

@@ -13,7 +13,7 @@ namespace Rad301ClubsV1.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201610140858538_Initial"; }
+            get { return "201611160954291_Initial"; }
         }
         
         string IMigrationMetadata.Source
